@@ -16,6 +16,13 @@ module Ecosystem
     # Packages built for "any" are published under the x86_64 tree on mirrors.
     MIRROR_ARCHITECTURE = "x86_64"
 
+    DEPENDENCY_FIELDS = {
+      "depends" => { kind: "runtime", optional: false },
+      "optdepends" => { kind: "runtime", optional: true },
+      "makedepends" => { kind: "build", optional: false },
+      "checkdepends" => { kind: "test", optional: false },
+    }.freeze
+
     def self.purl_type
       "alpm"
     end
@@ -82,6 +89,17 @@ module Ecosystem
 
     def packages_by_name
       @packages_by_name ||= fetch_all_packages.index_by { |package| package["pkgname"] }
+    end
+
+    def packages_by_provides
+      @packages_by_provides ||= packages_by_name.each_value.with_object({}) do |package, index|
+        Array(package["provides"]).each do |provided|
+          name = provided.to_s.split("=").first.to_s.strip
+          next if name.blank?
+
+          (index[name] ||= []) << package["pkgname"]
+        end
+      end
     end
 
     # The web interface pages 250 records at a time and reports how many pages
@@ -163,6 +181,15 @@ module Ecosystem
       ]
     end
 
+    def dependencies_metadata(name, version, _pkg_metadata)
+      record = fetch_package_metadata(name)
+      return [] if record.blank? || version_number(record) != version.to_s
+
+      DEPENDENCY_FIELDS.flat_map do |field, attributes|
+        dependencies_from_field(record[field], attributes)
+      end.uniq { |dependency| [dependency[:package_name], dependency[:kind]] }
+    end
+
     # pacman version strings are epoch:pkgver-pkgrel, with the epoch left off
     # when it is zero. It has to be kept, or 2:9.0.1-1 reads as older than 9.0.1-1.
     def version_number(record)
@@ -189,6 +216,62 @@ module Ecosystem
 
     def published(results)
       results.select { |package| REPOSITORIES.include?(package["repo"]) }
+    end
+
+    def dependencies_from_field(atoms, attributes)
+      Array(atoms).filter_map do |atom|
+        package_name, requirements = parse_dependency(atom)
+        next if package_name.blank?
+
+        unless packages_by_name.key?(package_name)
+          provider = package_providing(package_name)
+
+          if provider.present?
+            package_name = provider
+            # The constraint applied to the name we resolved from rather than to
+            # the package that provides it.
+            requirements = "*"
+          elsif package_name.end_with?(".so")
+            # A shared object nothing in the enabled repositories provides. There
+            # is no package of that name to point at, so there is nothing to record.
+            next
+          end
+        end
+
+        {
+          package_name: package_name,
+          requirements: requirements,
+          kind: attributes[:kind],
+          optional: attributes[:optional],
+          ecosystem: self.class.lowercase_name,
+        }
+      end
+    end
+
+    # Atoms are a package name with an optional version constraint, for example
+    # "glibc" or "zlib>=1.2". Constraints can carry an epoch, as in
+    # "alsa-plugins=1:1.2.12", so the description that optdepends entries append
+    # is split off on a colon followed by a space rather than on any colon.
+    def parse_dependency(atom)
+      atom = atom.to_s.split(": ").first.to_s.strip
+      return nil if atom.blank?
+
+      match = atom.match(/\A(?<name>[^<>=]+)(?<requirements>[<>=]+\S*)?\z/)
+      return nil if match.blank?
+
+      [match[:name].strip, match[:requirements].presence || "*"]
+    end
+
+    # Dependencies can name a shared object ("libisl.so=23-64") or a virtual
+    # package ("sh") instead of a real one, and the package holding it is not
+    # always listed alongside. Where a native and a multilib package both provide
+    # the name, the native one is what depending on it means.
+    def package_providing(name)
+      providers = packages_by_provides[name]
+      return nil if providers.blank?
+
+      providers = providers.sort
+      providers.reject { |provider| provider.start_with?("lib32-") }.first || providers.first
     end
   end
 end

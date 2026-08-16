@@ -170,6 +170,50 @@ class ArchTest < ActiveSupport::TestCase
     assert_equal [], @ecosystem.versions_metadata({ name: "wget" }, ["1.25.0-6"])
   end
 
+  test "dependencies_metadata" do
+    stub_index
+    dependencies = @ecosystem.dependencies_metadata("gcc", "16.2.1+r23+gd564253eb6c8-1", nil)
+
+    assert_equal [
+      { package_name: "binutils", requirements: ">=2.28", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "glibc", requirements: ">=2.27", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "gmp", requirements: "*", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "libasan", requirements: "=16.2.1+r23+gd564253eb6c8-1", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "libisl", requirements: "*", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "zlib", requirements: "*", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "lib32-gcc-libs", requirements: "*", kind: "runtime", optional: true, ecosystem: "arch" },
+      { package_name: "doxygen", requirements: "*", kind: "build", optional: false, ecosystem: "arch" },
+      { package_name: "python", requirements: "*", kind: "build", optional: false, ecosystem: "arch" },
+      { package_name: "dejagnu", requirements: "*", kind: "test", optional: false, ecosystem: "arch" },
+      { package_name: "inetutils", requirements: "*", kind: "test", optional: false, ecosystem: "arch" },
+    ], dependencies
+  end
+
+  # gcc depends on libisl.so=23-64 without naming libisl, which provides it.
+  test "dependencies_metadata resolves a shared object to the package providing it" do
+    stub_index
+    names = @ecosystem.dependencies_metadata("gcc", "16.2.1+r23+gd564253eb6c8-1", nil)
+      .map { |dependency| dependency[:package_name] }
+
+    assert_includes names, "libisl"
+    assert_not_includes names, "libisl.so"
+  end
+
+  # Nothing in the fixtures provides libidn2.so, so there is no package to point at.
+  test "dependencies_metadata drops an unresolvable shared object" do
+    stub_index
+    dependencies = @ecosystem.dependencies_metadata("wget", "1.25.0-6", nil)
+
+    assert_equal %w[glibc gnutls libidn2 ca-certificates autoconf-archive git],
+                 dependencies.map { |dependency| dependency[:package_name] }
+  end
+
+  test "dependencies_metadata returns nothing for another version" do
+    stub_index
+
+    assert_equal [], @ecosystem.dependencies_metadata("wget", "1.24.0-1", nil)
+  end
+
   test "check_status marks a package that is no longer published as removed" do
     stub_request(:get, "#{search_url}?name=wget")
       .to_return({ status: 200, body: file_fixture("arch/missing") })
