@@ -154,7 +154,7 @@ module Ecosystem
         name: pkg_metadata["pkgname"],
         description: pkg_metadata["pkgdesc"],
         homepage: pkg_metadata["url"],
-        licenses: Array(pkg_metadata["licenses"]).join(", "),
+        licenses: Array(pkg_metadata["licenses"]).join(" AND "),
         repository_url: find_repository_url([pkg_metadata["url"]]),
         keywords_array: Array(pkg_metadata["groups"]),
         namespace: pkg_metadata["repo"],

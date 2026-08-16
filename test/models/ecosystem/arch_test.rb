@@ -140,6 +140,21 @@ class ArchTest < ActiveSupport::TestCase
     assert_equal "2026-08-04T12:59:54.469Z", package_metadata[:metadata][:flagged_out_of_date_at]
   end
 
+  # Arch publishes SPDX identifiers, so joining them with AND keeps the field a
+  # valid SPDX expression. Joining with a comma does not, and the fallback
+  # matching then reads "GPL-3.0-or-later WITH GCC-exception-3.1" as
+  # BSD-3-Clause-Attribution.
+  test "package_metadata joins licences into an SPDX expression" do
+    stub_index
+    package_metadata = @ecosystem.package_metadata("gcc")
+
+    assert_equal "GFDL-1.3-or-later AND GPL-3.0-or-later WITH GCC-exception-3.1", package_metadata[:licenses]
+
+    package = Package.new(licenses: package_metadata[:licenses])
+    package.send(:normalize_licenses)
+    assert_equal ["GFDL-1.3-or-later", "GPL-3.0-or-later"], package.normalized_licenses
+  end
+
   test "versions_metadata" do
     stub_index
     versions_metadata = @ecosystem.versions_metadata({ name: "wget" })
