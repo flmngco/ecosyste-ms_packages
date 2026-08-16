@@ -1,0 +1,92 @@
+{
+  "version": 2,
+  "limit": 250,
+  "valid": true,
+  "results": [
+    {
+      "pkgname": "akonadi",
+      "pkgbase": "akonadi",
+      "repo": "extra",
+      "arch": "x86_64",
+      "pkgver": "26.04.3",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "PIM layer, which provides an asynchronous API to access all kind of PIM data",
+      "url": "https://kontact.kde.org",
+      "filename": "akonadi-26.04.3-1-x86_64.pkg.tar.zst",
+      "compressed_size": 3538053,
+      "installed_size": 14876258,
+      "build_date": "2026-06-30T12:57:55Z",
+      "last_update": "2026-07-02T11:03:11.284Z",
+      "flag_date": null,
+      "maintainers": [
+        "felixonmars",
+        "arojas"
+      ],
+      "packager": "arojas",
+      "groups": [],
+      "licenses": [
+        "LGPL-2.0-or-later"
+      ],
+      "conflicts": [
+        "libakonadi"
+      ],
+      "provides": [
+        "libakonadi"
+      ],
+      "replaces": [
+        "libakonadi"
+      ],
+      "depends": [
+        "gcc-libs"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "akonadi",
+      "pkgbase": "akonadi",
+      "repo": "kde-unstable",
+      "arch": "x86_64",
+      "pkgver": "26.07.90",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "PIM layer, which provides an asynchronous API to access all kind of PIM data",
+      "url": "https://kontact.kde.org",
+      "filename": "akonadi-26.07.90-1-x86_64.pkg.tar.zst",
+      "compressed_size": 3962679,
+      "installed_size": 16958293,
+      "build_date": "2026-07-31T08:38:05Z",
+      "last_update": "2026-07-31T13:09:44.269Z",
+      "flag_date": null,
+      "maintainers": [
+        "felixonmars",
+        "arojas"
+      ],
+      "packager": "arojas",
+      "groups": [],
+      "licenses": [
+        "LGPL-2.0-or-later"
+      ],
+      "conflicts": [
+        "libakonadi"
+      ],
+      "provides": [
+        "libakonadi"
+      ],
+      "replaces": [
+        "libakonadi"
+      ],
+      "depends": [
+        "gcc-libs"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    }
+  ],
+  "num_pages": 1,
+  "count": 2,
+  "page": 1
+}

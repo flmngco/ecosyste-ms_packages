@@ -1,0 +1,214 @@
+{
+  "version": 2,
+  "limit": 250,
+  "valid": true,
+  "results": [
+    {
+      "pkgname": "libisl",
+      "pkgbase": "libisl",
+      "repo": "core",
+      "arch": "x86_64",
+      "pkgver": "0.28",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "Library for manipulating sets and relations of integer points bounded by linear constraints",
+      "url": "https://libisl.sourceforge.io",
+      "filename": "libisl-0.28-1-x86_64.pkg.tar.zst",
+      "compressed_size": 980886,
+      "installed_size": 6191080,
+      "build_date": "2026-07-05T19:46:11Z",
+      "last_update": "2026-07-11T15:35:54.898Z",
+      "flag_date": null,
+      "maintainers": [
+        "freswa"
+      ],
+      "packager": "freswa",
+      "groups": [],
+      "licenses": [
+        "MIT"
+      ],
+      "conflicts": [],
+      "provides": [
+        "isl",
+        "libisl.so=23-64"
+      ],
+      "replaces": [
+        "isl"
+      ],
+      "depends": [
+        "gmp"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "adwaita-fonts",
+      "pkgbase": "adwaita-fonts",
+      "repo": "extra",
+      "arch": "any",
+      "pkgver": "50.0",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "The typefaces for GNOME",
+      "url": "https://gitlab.gnome.org/GNOME/adwaita-fonts",
+      "filename": "adwaita-fonts-50.0-1-any.pkg.tar.zst",
+      "compressed_size": 2233172,
+      "installed_size": 7646846,
+      "build_date": "2026-02-26T17:16:52Z",
+      "last_update": "2026-02-26T18:03:34.949Z",
+      "flag_date": "2026-08-04T12:59:54.469Z",
+      "maintainers": [
+        "fabiscafe"
+      ],
+      "packager": "heftig",
+      "groups": [],
+      "licenses": [
+        "OFL-1.1"
+      ],
+      "conflicts": [],
+      "provides": [],
+      "replaces": [],
+      "depends": [],
+      "optdepends": [],
+      "makedepends": [
+        "git",
+        "meson"
+      ],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "ffmpeg",
+      "pkgbase": "ffmpeg",
+      "repo": "extra",
+      "arch": "x86_64",
+      "pkgver": "9.0.1",
+      "pkgrel": "1",
+      "epoch": 2,
+      "pkgdesc": "Complete solution to record, convert and stream audio and video",
+      "url": "https://ffmpeg.org",
+      "filename": "ffmpeg-2:9.0.1-1-x86_64.pkg.tar.zst",
+      "compressed_size": 15889532,
+      "installed_size": 50800266,
+      "build_date": "2026-08-12T20:48:37Z",
+      "last_update": "2026-08-12T20:56:16.974Z",
+      "flag_date": null,
+      "maintainers": [
+        "lfleischer",
+        "alucryd"
+      ],
+      "packager": "lfleischer",
+      "groups": [],
+      "licenses": [
+        "GPL-3.0-only"
+      ],
+      "conflicts": [],
+      "provides": [
+        "libavcodec.so=63-64",
+        "libavdevice.so=63-64",
+        "libavfilter.so=12-64",
+        "libavformat.so=63-64",
+        "libavutil.so=61-64",
+        "libswresample.so=7-64",
+        "libswscale.so=10-64"
+      ],
+      "replaces": [],
+      "depends": [
+        "alsa-lib",
+        "aom"
+      ],
+      "optdepends": [
+        "avisynthplus: AviSynthPlus support"
+      ],
+      "makedepends": [
+        "git"
+      ],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "akonadi",
+      "pkgbase": "akonadi",
+      "repo": "extra",
+      "arch": "x86_64",
+      "pkgver": "26.04.3",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "PIM layer, which provides an asynchronous API to access all kind of PIM data",
+      "url": "https://kontact.kde.org",
+      "filename": "akonadi-26.04.3-1-x86_64.pkg.tar.zst",
+      "compressed_size": 3538053,
+      "installed_size": 14876258,
+      "build_date": "2026-06-30T12:57:55Z",
+      "last_update": "2026-07-02T11:03:11.284Z",
+      "flag_date": null,
+      "maintainers": [
+        "felixonmars",
+        "arojas"
+      ],
+      "packager": "arojas",
+      "groups": [],
+      "licenses": [
+        "LGPL-2.0-or-later"
+      ],
+      "conflicts": [
+        "libakonadi"
+      ],
+      "provides": [
+        "libakonadi"
+      ],
+      "replaces": [
+        "libakonadi"
+      ],
+      "depends": [
+        "gcc-libs"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "akonadi",
+      "pkgbase": "akonadi",
+      "repo": "kde-unstable",
+      "arch": "x86_64",
+      "pkgver": "26.07.90",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "PIM layer, which provides an asynchronous API to access all kind of PIM data",
+      "url": "https://kontact.kde.org",
+      "filename": "akonadi-26.07.90-1-x86_64.pkg.tar.zst",
+      "compressed_size": 3962679,
+      "installed_size": 16958293,
+      "build_date": "2026-07-31T08:38:05Z",
+      "last_update": "2026-07-31T13:09:44.269Z",
+      "flag_date": null,
+      "maintainers": [
+        "felixonmars",
+        "arojas"
+      ],
+      "packager": "arojas",
+      "groups": [],
+      "licenses": [
+        "LGPL-2.0-or-later"
+      ],
+      "conflicts": [
+        "libakonadi"
+      ],
+      "provides": [
+        "libakonadi"
+      ],
+      "replaces": [
+        "libakonadi"
+      ],
+      "depends": [
+        "gcc-libs"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    }
+  ],
+  "num_pages": 2,
+  "count": 7,
+  "page": 2
+}

@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "limit": 250,
+  "valid": true,
+  "results": [
+    {
+      "pkgname": "wget",
+      "pkgbase": "wget",
+      "repo": "extra",
+      "arch": "x86_64",
+      "pkgver": "1.25.0",
+      "pkgrel": "6",
+      "epoch": 0,
+      "pkgdesc": "Network utility to retrieve files from the web",
+      "url": "https://www.gnu.org/software/wget/wget.html",
+      "filename": "wget-1.25.0-6-x86_64.pkg.tar.zst",
+      "compressed_size": 721480,
+      "installed_size": 5974018,
+      "build_date": "2026-07-15T17:45:33Z",
+      "last_update": "2026-07-15T17:55:16.061Z",
+      "flag_date": null,
+      "maintainers": [
+        "anthraxx",
+        "Antiz",
+        "blakkheim"
+      ],
+      "packager": "blakkheim",
+      "groups": [],
+      "licenses": [
+        "GPL-3.0-or-later"
+      ],
+      "conflicts": [],
+      "provides": [],
+      "replaces": [],
+      "depends": [
+        "glibc",
+        "gnutls",
+        "libidn2",
+        "libidn2.so=0-64"
+      ],
+      "optdepends": [
+        "ca-certificates: HTTPS downloads"
+      ],
+      "makedepends": [
+        "autoconf-archive",
+        "git"
+      ],
+      "checkdepends": []
+    }
+  ],
+  "num_pages": 1,
+  "count": 1,
+  "page": 1
+}
