@@ -31,6 +31,10 @@ module Ecosystem
       true
     end
 
+    def sync_maintainers_inline?
+      true
+    end
+
     def has_dependent_repos?
       false
     end
@@ -68,6 +72,10 @@ module Ecosystem
 
     def install_command(package, _version = nil)
       "pacman -S #{package.name}"
+    end
+
+    def maintainer_url(maintainer)
+      "#{@registry_url}/packages/?maintainer=#{maintainer.login}"
     end
 
     def check_status(package)
@@ -188,6 +196,25 @@ module Ecosystem
       DEPENDENCY_FIELDS.flat_map do |field, attributes|
         dependencies_from_field(record[field], attributes)
       end.uniq { |dependency| [dependency[:package_name], dependency[:kind]] }
+    end
+
+    # The search interface gives maintainers as Arch account names, without the
+    # email addresses that the PKGBUILD carries.
+    def maintainers_metadata(name)
+      record = fetch_package_metadata(name)
+      return [] if record.blank?
+
+      Array(record["maintainers"]).filter_map do |login|
+        login = login.to_s.strip
+        next if login.blank?
+
+        {
+          uuid: login,
+          login: login,
+          name: login,
+          url: "#{@registry_url}/packages/?maintainer=#{login}",
+        }
+      end
     end
 
     # pacman version strings are epoch:pkgver-pkgrel, with the epoch left off

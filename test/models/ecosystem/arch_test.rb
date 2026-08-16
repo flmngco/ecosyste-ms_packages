@@ -8,6 +8,7 @@ class ArchTest < ActiveSupport::TestCase
     @ecosystem = Ecosystem::Arch.new(@registry)
     @package = Package.new(ecosystem: "arch", name: "wget", metadata: { "repository" => "extra", "architecture" => "x86_64" })
     @version = @package.versions.build(number: "1.25.0-6", metadata: { "filename" => "wget-1.25.0-6-x86_64.pkg.tar.zst" })
+    @maintainer = @registry.maintainers.build(login: "anthraxx")
   end
 
   def stub_index
@@ -212,6 +213,28 @@ class ArchTest < ActiveSupport::TestCase
     stub_index
 
     assert_equal [], @ecosystem.dependencies_metadata("wget", "1.24.0-1", nil)
+  end
+
+  test "maintainer_url" do
+    assert_equal "https://archlinux.org/packages/?maintainer=anthraxx", @ecosystem.maintainer_url(@maintainer)
+  end
+
+  test "maintainers_metadata" do
+    stub_index
+    maintainers_metadata = @ecosystem.maintainers_metadata("wget")
+
+    assert_equal [
+      { uuid: "anthraxx", login: "anthraxx", name: "anthraxx", url: "https://archlinux.org/packages/?maintainer=anthraxx" },
+      { uuid: "Antiz", login: "Antiz", name: "Antiz", url: "https://archlinux.org/packages/?maintainer=Antiz" },
+      { uuid: "blakkheim", login: "blakkheim", name: "blakkheim", url: "https://archlinux.org/packages/?maintainer=blakkheim" },
+    ], maintainers_metadata
+  end
+
+  test "maintainers_metadata is empty for an orphaned package" do
+    stub_index
+    @ecosystem.packages_by_name["wget"]["maintainers"] = []
+
+    assert_equal [], @ecosystem.maintainers_metadata("wget")
   end
 
   test "check_status marks a package that is no longer published as removed" do
