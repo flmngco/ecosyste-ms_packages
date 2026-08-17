@@ -188,6 +188,10 @@ class ArchTest < ActiveSupport::TestCase
     package = Package.new(licenses: package_metadata[:licenses])
     package.send(:normalize_licenses)
     assert_equal ["GFDL-1.3-or-later", "GPL-3.0-or-later"], package.normalized_licenses
+
+    comma_joined = Package.new(licenses: "GFDL-1.3-or-later, GPL-3.0-or-later WITH GCC-exception-3.1")
+    comma_joined.send(:normalize_licenses)
+    assert_equal ["GFDL-1.3-or-later", "BSD-3-Clause-Attribution"], comma_joined.normalized_licenses
   end
 
   test "versions_metadata" do
