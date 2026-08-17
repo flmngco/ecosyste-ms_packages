@@ -259,6 +259,19 @@ class ArchTest < ActiveSupport::TestCase
     assert_equal %w[curl lib32-openssl], names
   end
 
+  # nextcloud-app-calendar pins both ends of two ranges, and both bounds matter.
+  test "dependencies_metadata keeps every constraint on the same package" do
+    stub_index
+    dependencies = @ecosystem.dependencies_metadata("nextcloud-app-calendar", "1:6.5.3-1", nil)
+
+    assert_equal [
+      { package_name: "nextcloud", requirements: ">=32", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "nextcloud", requirements: "<35", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "php-interpreter", requirements: ">=8.1", kind: "runtime", optional: false, ecosystem: "arch" },
+      { package_name: "php-interpreter", requirements: "<8.6", kind: "runtime", optional: false, ecosystem: "arch" },
+    ], dependencies
+  end
+
   test "maintainer_url" do
     assert_equal "https://archlinux.org/packages/?maintainer=anthraxx", @ecosystem.maintainer_url(@maintainer)
   end

@@ -197,7 +197,7 @@ module Ecosystem
 
       DEPENDENCY_FIELDS.flat_map do |field, attributes|
         dependencies_from_field(record[field], attributes, name)
-      end.uniq { |dependency| [dependency[:package_name], dependency[:kind]] }
+      end.uniq { |dependency| [dependency[:package_name], dependency[:kind], dependency[:requirements]] }
     end
 
     # The search interface gives maintainers as Arch account names, without the
