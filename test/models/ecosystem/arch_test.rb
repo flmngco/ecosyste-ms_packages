@@ -336,4 +336,12 @@ class ArchTest < ActiveSupport::TestCase
 
     assert_nil @ecosystem.check_status(@package)
   end
+
+  # Package#check_status reads false as "could not tell" and keeps the status the
+  # package already had. Returning nil would mark an unreachable package active.
+  test "check_status returns false when the request fails" do
+    stub_request(:get, "#{search_url}?name=wget").to_timeout
+
+    assert_equal false, @ecosystem.check_status(@package)
+  end
 end

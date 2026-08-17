@@ -84,6 +84,11 @@ module Ecosystem
 
     def check_status(package)
       return "removed" if fetch_package(package.name).blank?
+
+      nil
+    rescue StandardError => e
+      Rails.logger.warn("Arch #{registry.name}: status check failed for #{package.name}: #{e.message}")
+      false
     end
 
     def all_package_names
