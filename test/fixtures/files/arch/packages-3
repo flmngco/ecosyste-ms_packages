@@ -1,0 +1,247 @@
+{
+  "version": 2,
+  "limit": 250,
+  "valid": true,
+  "results": [
+    {
+      "pkgname": "lib32-curl",
+      "pkgbase": "lib32-curl",
+      "repo": "multilib",
+      "arch": "x86_64",
+      "pkgver": "8.21.0",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "command line tool and library for transferring data with URLs (32-bit)",
+      "url": "https://curl.se/",
+      "filename": "lib32-curl-8.21.0-1-x86_64.pkg.tar.zst",
+      "compressed_size": 445988,
+      "installed_size": 1021132,
+      "build_date": "2026-06-24T06:26:10Z",
+      "last_update": "2026-06-25T06:43:32.437Z",
+      "flag_date": null,
+      "maintainers": [
+        "felixonmars",
+        "eworm",
+        "artafinde"
+      ],
+      "packager": "eworm",
+      "groups": [],
+      "licenses": [
+        "MIT"
+      ],
+      "conflicts": [],
+      "provides": [
+        "libcurl.so=4-32"
+      ],
+      "replaces": [],
+      "depends": [
+        "curl",
+        "lib32-openssl",
+        "libssl.so=3-32",
+        "libz.so=1-32"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "lib32-openssl",
+      "pkgbase": "lib32-openssl",
+      "repo": "multilib",
+      "arch": "x86_64",
+      "pkgver": "3.6.3",
+      "pkgrel": "1",
+      "epoch": 1,
+      "pkgdesc": "The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (32-bit)",
+      "url": "https://www.openssl.org",
+      "filename": "lib32-openssl-1:3.6.3-1-x86_64.pkg.tar.zst",
+      "compressed_size": 2171356,
+      "installed_size": 5742261,
+      "build_date": "2026-06-09T16:24:28Z",
+      "last_update": "2026-06-09T16:32:08.938Z",
+      "flag_date": "2026-06-09T16:36:06.371Z",
+      "maintainers": [
+        "pierre"
+      ],
+      "packager": "pierre",
+      "groups": [],
+      "licenses": [
+        "Apache"
+      ],
+      "conflicts": [],
+      "provides": [
+        "libcrypto.so=3-32",
+        "libssl.so=3-32"
+      ],
+      "replaces": [],
+      "depends": [
+        "lib32-glibc",
+        "openssl"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "openssl",
+      "pkgbase": "openssl",
+      "repo": "core",
+      "arch": "x86_64",
+      "pkgver": "3.6.3",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "The Open Source toolkit for cryptography and Transport Layer Security",
+      "url": "https://www.openssl.org",
+      "filename": "openssl-3.6.3-1-x86_64.pkg.tar.zst",
+      "compressed_size": 5750527,
+      "installed_size": 12830139,
+      "build_date": "2026-06-09T16:12:05Z",
+      "last_update": "2026-06-09T19:23:14.432Z",
+      "flag_date": "2026-07-25T08:49:50.106Z",
+      "maintainers": [
+        "pierre"
+      ],
+      "packager": "pierre",
+      "groups": [],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "conflicts": [],
+      "provides": [
+        "libcrypto.so=3-64",
+        "libssl.so=3-64"
+      ],
+      "replaces": [
+        "openssl-doc",
+        "openssl-perl"
+      ],
+      "depends": [
+        "glibc",
+        "zlib"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "nextcloud-app-calendar",
+      "pkgbase": "nextcloud-app-calendar",
+      "repo": "extra",
+      "arch": "any",
+      "pkgver": "6.5.3",
+      "pkgrel": "1",
+      "epoch": 1,
+      "pkgdesc": "Calendar app for nextcloud",
+      "url": "https://github.com/nextcloud/calendar/",
+      "filename": "nextcloud-app-calendar-1:6.5.3-1-any.pkg.tar.zst",
+      "compressed_size": 6472370,
+      "installed_size": 96070601,
+      "build_date": "2026-08-11T21:26:51Z",
+      "last_update": "2026-08-11T21:35:04.182Z",
+      "flag_date": "2026-08-11T21:46:32.749Z",
+      "maintainers": [
+        "spupykin"
+      ],
+      "packager": "spupykin",
+      "groups": [
+        "nextcloud-apps"
+      ],
+      "licenses": [
+        "AGPL-3.0-or-later"
+      ],
+      "conflicts": [],
+      "provides": [],
+      "replaces": [],
+      "depends": [
+        "nextcloud>=32",
+        "nextcloud<35",
+        "php-interpreter>=8.1",
+        "php-interpreter<8.6"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "zlib",
+      "pkgbase": "zlib",
+      "repo": "core",
+      "arch": "x86_64",
+      "pkgver": "1.3.2",
+      "pkgrel": "3",
+      "epoch": 1,
+      "pkgdesc": "Compression library implementing the deflate compression method found in gzip and PKZIP",
+      "url": "https://www.zlib.net/",
+      "filename": "zlib-1:1.3.2-3-x86_64.pkg.tar.zst",
+      "compressed_size": 84690,
+      "installed_size": 228580,
+      "build_date": "2026-03-08T15:43:56Z",
+      "last_update": "2026-03-08T17:35:10.576Z",
+      "flag_date": null,
+      "maintainers": [
+        "anthraxx",
+        "dvzrv"
+      ],
+      "packager": "dvzrv",
+      "groups": [],
+      "licenses": [
+        "Zlib"
+      ],
+      "conflicts": [],
+      "provides": [
+        "libz.so=1-64"
+      ],
+      "replaces": [],
+      "depends": [
+        "glibc"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    },
+    {
+      "pkgname": "zlib-ng-compat",
+      "pkgbase": "zlib-ng",
+      "repo": "extra",
+      "arch": "x86_64",
+      "pkgver": "2.3.3",
+      "pkgrel": "1",
+      "epoch": 0,
+      "pkgdesc": "zlib replacement with optimizations for next generation systems (zlib compat)",
+      "url": "https://github.com/zlib-ng/zlib-ng",
+      "filename": "zlib-ng-compat-2.3.3-1-x86_64.pkg.tar.zst",
+      "compressed_size": 115163,
+      "installed_size": 296388,
+      "build_date": "2026-02-04T07:42:46Z",
+      "last_update": "2026-02-04T16:31:12.274Z",
+      "flag_date": null,
+      "maintainers": [
+        "anthraxx",
+        "eworm",
+        "artafinde"
+      ],
+      "packager": "eworm",
+      "groups": [],
+      "licenses": [
+        "Zlib"
+      ],
+      "conflicts": [
+        "zlib"
+      ],
+      "provides": [
+        "libz.so=1-64",
+        "zlib"
+      ],
+      "replaces": [],
+      "depends": [
+        "glibc"
+      ],
+      "optdepends": [],
+      "makedepends": [],
+      "checkdepends": []
+    }
+  ],
+  "num_pages": 3,
+  "count": 13,
+  "page": 3
+}

@@ -16,6 +16,8 @@ module Ecosystem
     # Packages built for "any" are published under the x86_64 tree on mirrors.
     MIRROR_ARCHITECTURE = "x86_64"
 
+    MULTILIB_PREFIX = "lib32-"
+
     DEPENDENCY_FIELDS = {
       "depends" => { kind: "runtime", optional: false },
       "optdepends" => { kind: "runtime", optional: true },
@@ -194,7 +196,7 @@ module Ecosystem
       return [] if record.blank? || version_number(record) != version.to_s
 
       DEPENDENCY_FIELDS.flat_map do |field, attributes|
-        dependencies_from_field(record[field], attributes)
+        dependencies_from_field(record[field], attributes, name)
       end.uniq { |dependency| [dependency[:package_name], dependency[:kind]] }
     end
 
@@ -245,13 +247,13 @@ module Ecosystem
       results.select { |package| REPOSITORIES.include?(package["repo"]) }
     end
 
-    def dependencies_from_field(atoms, attributes)
+    def dependencies_from_field(atoms, attributes, consumer)
       Array(atoms).filter_map do |atom|
         package_name, requirements = parse_dependency(atom)
         next if package_name.blank?
 
         unless packages_by_name.key?(package_name)
-          provider = package_providing(package_name)
+          provider = package_providing(package_name, consumer)
 
           if provider.present?
             package_name = provider
@@ -259,8 +261,9 @@ module Ecosystem
             # the package that provides it.
             requirements = "*"
           elsif package_name.end_with?(".so")
-            # A shared object nothing in the enabled repositories provides. There
-            # is no package of that name to point at, so there is nothing to record.
+            # A shared object that no single package in the enabled repositories
+            # accounts for. There is no package of that name to point at, so
+            # there is nothing to record.
             next
           end
         end
@@ -291,14 +294,26 @@ module Ecosystem
 
     # Dependencies can name a shared object ("libisl.so=23-64") or a virtual
     # package ("sh") instead of a real one, and the package holding it is not
-    # always listed alongside. Where a native and a multilib package both provide
-    # the name, the native one is what depending on it means.
-    def package_providing(name)
+    # always listed alongside, so those go through the provides index.
+    #
+    # A 32 bit package means the 32 bit provider. lib32-curl depends on
+    # libssl.so=3-32, which lib32-openssl provides and openssl does not, so the
+    # candidates are narrowed to providers of the same word size first.
+    #
+    # If more than one candidate is left the name is returned unresolved. Several
+    # packages provide java-runtime at different versions, and libz.so comes from
+    # both zlib and zlib-ng-compat, and nothing in the index says which one a
+    # given dependency meant. Picking one anyway would record a dependency the
+    # package does not have.
+    def package_providing(name, consumer)
       providers = packages_by_provides[name]
       return nil if providers.blank?
 
-      providers = providers.sort
-      providers.reject { |provider| provider.start_with?("lib32-") }.first || providers.first
+      multilib = consumer.to_s.start_with?(MULTILIB_PREFIX)
+      candidates = providers.select { |provider| provider.start_with?(MULTILIB_PREFIX) == multilib }
+      candidates = providers if candidates.empty?
+
+      candidates.one? ? candidates.first : nil
     end
   end
 end

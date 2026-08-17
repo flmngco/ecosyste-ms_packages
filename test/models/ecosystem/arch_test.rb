@@ -16,6 +16,8 @@ class ArchTest < ActiveSupport::TestCase
       .to_return({ status: 200, body: file_fixture("arch/packages-1") })
     stub_request(:get, "#{search_url}?page=2")
       .to_return({ status: 200, body: file_fixture("arch/packages-2") })
+    stub_request(:get, "#{search_url}?page=3")
+      .to_return({ status: 200, body: file_fixture("arch/packages-3") })
   end
 
   def search_url
@@ -73,13 +75,17 @@ class ArchTest < ActiveSupport::TestCase
   test "all_package_names" do
     stub_index
 
-    assert_equal %w[adwaita-fonts akonadi ffmpeg gcc libisl wget], @ecosystem.all_package_names
+    assert_equal %w[adwaita-fonts akonadi ffmpeg gcc lib32-curl lib32-openssl libisl
+                    nextcloud-app-calendar openssl wget zlib zlib-ng-compat],
+                 @ecosystem.all_package_names
   end
 
   test "recently_updated_package_names returns the most recently updated first" do
     stub_index
 
-    assert_equal %w[ffmpeg gcc wget libisl akonadi adwaita-fonts], @ecosystem.recently_updated_package_names
+    assert_equal %w[ffmpeg nextcloud-app-calendar gcc wget libisl akonadi lib32-curl
+                    openssl lib32-openssl zlib adwaita-fonts zlib-ng-compat],
+                 @ecosystem.recently_updated_package_names
   end
 
   # akonadi is in extra and, at a newer version, in kde-unstable.
@@ -228,6 +234,29 @@ class ArchTest < ActiveSupport::TestCase
     stub_index
 
     assert_equal [], @ecosystem.dependencies_metadata("wget", "1.24.0-1", nil)
+  end
+
+  # lib32-curl depends on libssl.so=3-32, which lib32-openssl provides and
+  # openssl does not, even though both provide a libssl.so.
+  test "dependencies_metadata resolves a shared object to the provider of the same word size" do
+    stub_index
+    names = @ecosystem.dependencies_metadata("lib32-curl", "8.21.0-1", nil)
+      .map { |dependency| dependency[:package_name] }
+
+    assert_includes names, "lib32-openssl"
+    assert_not_includes names, "openssl"
+  end
+
+  # zlib and zlib-ng-compat both provide libz.so=1-64, so lib32-curl's
+  # libz.so=1-32 has no single package behind it.
+  test "dependencies_metadata drops a shared object with more than one provider" do
+    stub_index
+    names = @ecosystem.dependencies_metadata("lib32-curl", "8.21.0-1", nil)
+      .map { |dependency| dependency[:package_name] }
+
+    assert_not_includes names, "zlib"
+    assert_not_includes names, "zlib-ng-compat"
+    assert_equal %w[curl lib32-openssl], names
   end
 
   test "maintainer_url" do
