@@ -18,6 +18,8 @@ module Ecosystem
 
     MULTILIB_PREFIX = "lib32-"
 
+    PAGE_ATTEMPTS = 3
+
     DEPENDENCY_FIELDS = {
       "depends" => { kind: "runtime", optional: false },
       "optdepends" => { kind: "runtime", optional: true },
@@ -114,17 +116,21 @@ module Ecosystem
 
     # The web interface pages 250 records at a time and reports how many pages
     # there are, so the first response tells us when to stop.
+    #
+    # A page that cannot be read raises rather than returning what has been
+    # collected so far. A truncated index is indistinguishable from a shrinking
+    # registry, and the dependencies recorded from one would never be corrected,
+    # because Registry#sync_package only writes dependencies alongside a version
+    # it has not seen before.
     def fetch_all_packages
       packages = []
       page = 1
       pages = 1
 
       while page <= pages
-        response = get_json("#{search_url}?page=#{page}")
-        break unless response.is_a?(Hash)
-
+        response = fetch_page(page)
         results = response["results"]
-        break if results.blank?
+        raise "Arch #{registry.name} returned no packages for page #{page} of #{pages}" if results.blank?
 
         packages.concat(published(results))
         pages = response["num_pages"].to_i
@@ -132,9 +138,26 @@ module Ecosystem
       end
 
       packages
-    rescue StandardError => e
-      Rails.logger.error("Arch #{registry.name}: failed to load package index: #{e.message}")
-      packages
+    end
+
+    # A full crawl is 65 requests and now and then one comes back as something
+    # other than JSON, so a page is retried a couple of times before the sync
+    # gives up on the whole index.
+    def fetch_page(page)
+      attempts = 0
+
+      begin
+        attempts += 1
+        response = get_json("#{search_url}?page=#{page}")
+        return response if response.is_a?(Hash)
+
+        raise "the response was not a JSON object"
+      rescue StandardError => e
+        raise "Arch #{registry.name} could not read page #{page}: #{e.message}" if attempts >= PAGE_ATTEMPTS
+
+        Rails.logger.warn("Arch #{registry.name}: retrying page #{page} after #{e.message}")
+        retry
+      end
     end
 
     def fetch_package_metadata_uncached(name)

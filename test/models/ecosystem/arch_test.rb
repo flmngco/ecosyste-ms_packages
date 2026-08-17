@@ -88,6 +88,35 @@ class ArchTest < ActiveSupport::TestCase
                  @ecosystem.recently_updated_package_names
   end
 
+  test "fetch_all_packages raises rather than returning a truncated index" do
+    stub_request(:get, "#{search_url}?page=1")
+      .to_return({ status: 200, body: file_fixture("arch/packages-1") })
+    stub_request(:get, "#{search_url}?page=2")
+      .to_return({ status: 200, body: file_fixture("arch/missing") })
+
+    error = assert_raises(RuntimeError) { @ecosystem.all_package_names }
+    assert_match "page 2 of 3", error.message
+  end
+
+  test "fetch_all_packages gives up on a page that keeps failing" do
+    stub_request(:get, "#{search_url}?page=1").to_timeout
+
+    error = assert_raises(RuntimeError) { @ecosystem.all_package_names }
+    assert_match "could not read page 1", error.message
+  end
+
+  test "fetch_all_packages retries a page that comes back as something other than JSON" do
+    stub_request(:get, "#{search_url}?page=1")
+      .to_return({ status: 200, body: "<html>bad gateway</html>" })
+      .then.to_return({ status: 200, body: file_fixture("arch/packages-1") })
+    stub_request(:get, "#{search_url}?page=2")
+      .to_return({ status: 200, body: file_fixture("arch/packages-2") })
+    stub_request(:get, "#{search_url}?page=3")
+      .to_return({ status: 200, body: file_fixture("arch/packages-3") })
+
+    assert_includes @ecosystem.all_package_names, "wget"
+  end
+
   # akonadi is in extra and, at a newer version, in kde-unstable.
   test "package_metadata ignores builds from repositories that are not enabled" do
     stub_index
